@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const filePath = path.join(process.cwd(), "public", nomeArquivo);
     fs.writeFileSync(filePath, conteudo, "utf8");
 
-    return res.status(200).json({ message: "Arquivo gerado com sucesso", path: `/public/${nomeArquivo}` });
+    return res.status(200).json({ message: "Arquivo gerado com sucesso", path: `/api/v1/${nomeArquivo}` });
   } catch (error) {
     return res.status(500).json({ message: "Erro ao gerar o arquivo", error });
   }
