@@ -1,1 +1,25 @@
+<form id="formulario">
+  <input type="text" name="nome" placeholder="Nome do arquivo.txt" />
+  <textarea name="conteudo" placeholder="Conteúdo do arquivo"></textarea>
+  <button type="submit">Gerar Arquivo</button>
+</form>
 
+<script>
+  const form = document.getElementById("formulario");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nome = form.nome.value;
+    const conteudo = form.conteudo.value;
+
+    const res = await fetch("/api/gerarArquivo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nomeArquivo: nome, conteudo }),
+    });
+
+    const data = await res.json();
+    alert(data.message);
+  });
+</script>
