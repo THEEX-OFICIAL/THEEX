@@ -6,41 +6,40 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background: #f0f0f0;
       padding: 40px;
       text-align: center;
     }
 
     form {
-      background: #fff;
+      background: white;
       padding: 20px;
-      max-width: 500px;
-      margin: auto;
       border-radius: 10px;
+      display: inline-block;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     input, textarea {
       width: 100%;
-      padding: 12px;
       margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 6px;
       font-size: 16px;
     }
 
     button {
       padding: 12px 24px;
+      font-size: 16px;
       background-color: #0070f3;
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 5px;
       cursor: pointer;
     }
 
     button:hover {
-      background-color: #0059c1;
+      background-color: #0051b8;
     }
 
     #mensagem {
@@ -62,7 +61,7 @@
   <div id="mensagem"></div>
 
   <script>
-    const token = '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'; // Substitua aqui pelo seu token do GitHub
+    const token = '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';
     const repo = 'THEEX';
     const owner = 'THEEX-OFICIAL';
     const branch = 'main';
@@ -74,7 +73,6 @@
       const conteudo = document.getElementById('conteudo').value;
       const path = `api/v1/${nomeArquivo}`;
       const base64Content = btoa(unescape(encodeURIComponent(conteudo)));
-
       const mensagem = document.getElementById('mensagem');
       mensagem.textContent = 'Enviando...';
 
@@ -83,7 +81,7 @@
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
-          'User-Agent': 'github-api-request'
+          'User-Agent': 'github-html-client'
         },
         body: JSON.stringify({
           message: `Criando arquivo ${nomeArquivo}`,
@@ -95,10 +93,10 @@
       const data = await response.json();
 
       if (response.ok) {
-        mensagem.innerHTML = `Arquivo criado com sucesso: <a href="${data.content.html_url}" target="_blank">${data.content.html_url}</a>`;
+        mensagem.innerHTML = `✅ Arquivo criado com sucesso: <a href="${data.content.html_url}" target="_blank">${data.content.html_url}</a>`;
       } else {
+        mensagem.textContent = `❌ Erro: ${data.message || 'Erro desconhecido'}`;
         console.error(data);
-        mensagem.textContent = `Erro: ${data.message || 'Erro desconhecido'}`;
       }
     });
   </script>
