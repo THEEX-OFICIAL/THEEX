@@ -4,29 +4,44 @@
   <meta charset="UTF-8">
   <title>THEEX API</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 30px; }
-    h1 { font-size: 2em; }
-    .result { margin-top: 20px; font-size: 1.5em; color: #333; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f0f0f0;
+      text-align: center;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
-  <h1>API THEEX</h1>
-  <div class="result" id="output">Processando...</div>
+  <div class="box">
+    <h1>Resposta da API</h1>
+    <p><strong>Fala:</strong> <span id="fala">Carregando...</span></p>
+    <p><strong>Resposta:</strong> <span id="resposta">Carregando...</span></p>
+  </div>
 
   <script>
-    // Pega a parte após /API/ na URL
-    const path = window.location.pathname;
-    const partes = path.split("/").filter(p => p); // remove vazios
+    // Captura os segmentos da URL
+    const partes = window.location.pathname.split('/').filter(Boolean);
 
-    // Espera que a URL seja: /THEEX/API/fala/resposta
-    const fala = partes[2] || "Não informado";
-    const resposta = partes[3] || "Não informado";
+    // Esperado: /THEEX-API/API/fala/resposta
+    const fala = partes[2] || 'não encontrado';
+    const resposta = partes[3] || 'não encontrado';
 
-    const output = document.getElementById("output");
-    output.innerHTML = `
-      <strong>Fala:</strong> ${decodeURIComponent(fala)}<br>
-      <strong>Resposta:</strong> ${decodeURIComponent(resposta)}
-    `;
+    document.getElementById('fala').innerText = decodeURIComponent(fala);
+    document.getElementById('resposta').innerText = decodeURIComponent(resposta);
   </script>
 </body>
 </html>
