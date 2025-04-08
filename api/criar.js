@@ -5,10 +5,10 @@ export default async function handler(req, res) {
 
   const { nomeArquivo, conteudo } = req.body;
 
-  const repo = 'NOME_DO_REPOSITORIO'; // Ex: meu-repo
-  const owner = 'SEU_USUARIO_GITHUB'; // Ex: victorUser
+  const repo = 'THEEX'; // Ex: meu-repo
+  const owner = 'THEEX-OFICIAL'; // Ex: victorUser
   const path = `api/v1/${nomeArquivo}`; // Caminho dentro do repositório
-  const token = 'SEU_TOKEN_GITHUB'; // ⚠️ Mantenha seguro - nunca expose no client
+  const token = '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'; // ⚠️ Mantenha seguro - nunca expose no client
   const branch = 'main';
 
   const base64Content = Buffer.from(conteudo).toString('base64');
