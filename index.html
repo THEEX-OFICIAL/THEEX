@@ -1,24 +1,107 @@
-<form id="formulario">
-  <input type="text" name="nome" placeholder="arquivo.txt" required />
-  <textarea name="conteudo" placeholder="Texto do arquivo" required></textarea>
-  <button type="submit">Criar arquivo</button>
-</form>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Criar Arquivo no GitHub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+      text-align: center;
+    }
 
-<script>
-  document.getElementById('formulario').addEventListener('submit', async (e) => {
-    e.preventDefault();
+    form {
+      background: #fff;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-    const nome = e.target.nome.value;
-    const conteudo = e.target.conteudo.value;
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
 
-    const res = await fetch('/api/criar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nomeArquivo: nome, conteudo })
+    button {
+      padding: 12px 24px;
+      background-color: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0059c1;
+    }
+
+    #mensagem {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Criar Arquivo no GitHub</h1>
+
+  <form id="formulario">
+    <input type="text" id="nome" placeholder="Ex: arquivo.txt" required>
+    <textarea id="conteudo" placeholder="Conteúdo do arquivo..." rows="10" required></textarea>
+    <button type="submit">Criar Arquivo</button>
+  </form>
+
+  <div id="mensagem"></div>
+
+  <script>
+    const token = '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'; // Substitua aqui pelo seu token do GitHub
+    const repo = 'THEEX';
+    const owner = 'THEEX-OFICIAL';
+    const branch = 'main';
+
+    document.getElementById('formulario').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const nomeArquivo = document.getElementById('nome').value.trim();
+      const conteudo = document.getElementById('conteudo').value;
+      const path = `api/v1/${nomeArquivo}`;
+      const base64Content = btoa(unescape(encodeURIComponent(conteudo)));
+
+      const mensagem = document.getElementById('mensagem');
+      mensagem.textContent = 'Enviando...';
+
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'User-Agent': 'github-api-request'
+        },
+        body: JSON.stringify({
+          message: `Criando arquivo ${nomeArquivo}`,
+          content: base64Content,
+          branch: branch
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        mensagem.innerHTML = `Arquivo criado com sucesso: <a href="${data.content.html_url}" target="_blank">${data.content.html_url}</a>`;
+      } else {
+        console.error(data);
+        mensagem.textContent = `Erro: ${data.message || 'Erro desconhecido'}`;
+      }
     });
+  </script>
 
-    const data = await res.json();
-    alert(data.message);
-    console.log(data);
-  });
-</script>
+</body>
+</html>
