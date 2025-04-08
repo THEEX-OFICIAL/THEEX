@@ -5,10 +5,15 @@ export default async function handler(req, res) {
 
   const { nomeArquivo, conteudo } = req.body;
 
-  const repo = 'THEEX'; // Ex: meu-repo
-  const owner = 'THEEX-OFICIAL'; // Ex: victorUser
-  const path = `api/v1/${nomeArquivo}`; // Caminho dentro do repositório
-  const token = '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'; // ⚠️ Mantenha seguro - nunca expose no client
+  // Verificações básicas
+  if (!nomeArquivo || !conteudo) {
+    return res.status(400).json({ message: 'Nome do arquivo e conteúdo são obrigatórios.' });
+  }
+
+  const repo = 'THEEX';
+  const owner = 'THEEX-OFICIAL';
+  const path = `api/v1/${nomeArquivo}`;
+  const token = process.env.GITHUB_TOKEN; // Coloque seu token em variável de ambiente na Vercel
   const branch = 'main';
 
   const base64Content = Buffer.from(conteudo).toString('base64');
@@ -32,12 +37,20 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    if (response.status >= 200 && response.status < 300) {
-      return res.status(200).json({ message: 'Arquivo criado com sucesso', data });
+    if (response.ok) {
+      return res.status(200).json({ message: 'Arquivo criado com sucesso!', url: data.content.html_url });
     } else {
-      return res.status(response.status).json({ message: 'Erro ao criar o arquivo', error: data });
+      return res.status(response.status).json({
+        message: 'Erro ao criar o arquivo',
+        error: data,
+        debug: {
+          requestUrl: url,
+          requestBody: { path, nomeArquivo, conteudo },
+          status: response.status
+        }
+      });
     }
   } catch (err) {
-    return res.status(500).json({ message: 'Erro interno', error: err.message });
+    return res.status(500).json({ message: 'Erro interno do servidor', error: err.message });
   }
 }
